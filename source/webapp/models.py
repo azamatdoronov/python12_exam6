@@ -4,7 +4,7 @@ from django.db import models
 STATUS_CHOICES = [('active', 'Активно'), ('blocked', 'Заблокировано')]
 
 
-class Guest_book(models.Model):
+class Guestbook(models.Model):
     author = models.CharField(max_length=20, null=False, blank=False, default="Unknown", verbose_name="Имя автора")
     email = models.EmailField(max_length=20, null=False, blank=False, default="No Email", verbose_name="Эл. почта")
     note = models.TextField(max_length=2000, null=False, blank=False, verbose_name="Запись")
