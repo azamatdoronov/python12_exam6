@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from webapp.forms import GuestbookForm
-from webapp.models import Guestbook, STATUS_CHOICES
+from webapp.models import Guestbook
 
 
 def index_view(request):
@@ -25,5 +25,30 @@ def create_guestbook(request):
         return render(request, "create.html", {"form": form})
 
 
+def update_guestbook(request, pk):
+    guestbook = get_object_or_404(Guestbook, pk=pk)
+    if request.method == "GET":
+        form = GuestbookForm(initial={
+            "author": guestbook.author,
+            "email": guestbook.email,
+            "note": guestbook.note
+        })
+        return render(request, "update.html", {"form": form})
+    else:
+        form = GuestbookForm(data=request.POST)
+        if form.is_valid():
+            guestbook.author = form.cleaned_data.get("author")
+            guestbook.email = form.cleaned_data.get("email")
+            guestbook.note = form.cleaned_data.get("note")
+            guestbook.save()
+            return redirect("index")
+        return render(request, "update.html", {"form": form})
 
 
+def delete_guestbook(request, pk):
+    guestbook = get_object_or_404(Guestbook, pk=pk)
+    if request.method == "GET":
+        return render(request, "delete.html", {"guestbook": guestbook})
+    else:
+        guestbook.delete()
+        return redirect("index")
